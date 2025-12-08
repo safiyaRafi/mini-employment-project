@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/axios';
+import { motion } from 'framer-motion';
 
 export default function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { login } = useAuth();
-    const navigate = useNavigate(); // Standard hook
+    const navigate = useNavigate();
     const [error, setError] = useState('');
 
     const onSubmit = async (data: any) => {
@@ -21,36 +22,79 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-                {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="min-h-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center relative overflow-hidden">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" />
+
+            {/* Animated Background Blobs */}
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="relative w-full max-w-md p-8 glass rounded-2xl"
+            >
+                <div className="text-center mb-8">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-3xl font-bold text-white mb-2"
+                    >
+                        Welcome Back
+                    </motion.h2>
+                    <p className="text-slate-300">Enter your credentials to access the portal</p>
+                </div>
+
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="bg-red-500/10 border border-red-500/20 text-red-200 p-3 rounded-lg mb-6 text-sm flex items-center gap-2"
+                    >
+                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+                        {error}
+                    </motion.div>
+                )}
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Username</label>
+                        <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Username</label>
                         <input
                             {...register('username', { required: 'Username is required' })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                            className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                            placeholder="admin"
                         />
-                        {errors.username && <span className="text-red-500 text-sm">{String(errors.username.message)}</span>}
+                        {errors.username && <span className="text-red-400 text-xs mt-1 block">{String(errors.username.message)}</span>}
                     </div>
+
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Password</label>
                         <input
                             type="password"
                             {...register('password', { required: 'Password is required' })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                            className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                            placeholder="••••••••"
                         />
-                        {errors.password && <span className="text-red-500 text-sm">{String(errors.password.message)}</span>}
+                        {errors.password && <span className="text-red-400 text-xs mt-1 block">{String(errors.password.message)}</span>}
                     </div>
-                    <button
+
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-200"
                     >
                         Sign In
-                    </button>
+                    </motion.button>
                 </form>
-            </div>
+
+                <div className="mt-6 text-center text-xs text-slate-500">
+                    Protected by Enterprise Grade Security
+                </div>
+            </motion.div>
         </div>
     );
 }

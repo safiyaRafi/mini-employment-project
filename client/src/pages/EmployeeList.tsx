@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilSquareIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import api from '../lib/axios';
 import EmployeeModal from '../components/EmployeeModal';
 
@@ -26,10 +26,6 @@ export default function EmployeeList() {
             const res = await api.get(`/employees?page=${page}&limit=10&search=${search}`);
             return res.data;
         },
-        // keepPreviousData is deprecated in v5, use placeholderData if needed or remove. 
-        // Assuming v4 or ignoring deprecation for now, but better to be safe.
-        // Actually this project installed @tanstack/react-query which is v4 or v5. v5 removed keepPreviousData.
-        // I will remove keepPreviousData to be safe if v5.
     });
 
     const handleDelete = async (id: string) => {
@@ -52,88 +48,100 @@ export default function EmployeeList() {
 
     return (
         <div>
-            <div className="sm:flex sm:items-center">
+            <div className="sm:flex sm:items-center justify-between mb-6">
                 <div className="sm:flex-auto">
-                    <h1 className="text-2xl font-semibold leading-6 text-gray-900">Employees</h1>
-                    <p className="mt-2 text-sm text-gray-700">A list of all the employees in your account including their name, title, email and role.</p>
+                    <h1 className="text-3xl font-bold text-white">Employees</h1>
+                    <p className="mt-2 text-sm text-slate-400">Manage your team members and their roles.</p>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                     <button
                         type="button"
                         onClick={openAddModal}
-                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="block rounded-xl bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-500 transition-all duration-200"
                     >
-                        <PlusIcon className="h-5 w-5 inline-block mr-1" />
+                        <PlusIcon className="h-5 w-5 inline-block mr-2" />
                         Add Employee
                     </button>
                 </div>
             </div>
 
-            <div className="mt-4 flex gap-4">
-                <input
-                    type="text"
-                    placeholder="Search employees..."
-                    value={search}
-                    onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                    className="block w-full max-w-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                />
+            <div className="mt-4 flex gap-4 mb-6">
+                <div className="relative w-full max-w-md group">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <MagnifyingGlassIcon className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-500 transition-colors" aria-hidden="true" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search by name, email, or dept..."
+                        value={search}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                        className="block w-full rounded-xl bg-slate-800 border-slate-700 py-3 pl-10 pr-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:bg-slate-800 focus:ring-2 focus:ring-indigo-500 sm:text-sm shadow-sm transition-all duration-200"
+                    />
+                </div>
             </div>
 
-            <div className="mt-8 flow-root">
-                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                        {isLoading ? (
-                            <div className="text-center py-4">Loading...</div>
-                        ) : (
-                            <table className="min-w-full divide-y divide-gray-300">
-                                <thead>
-                                    <tr>
-                                        <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
-                                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Title</th>
-                                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Department</th>
-                                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-                                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
-                                        <th className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                                            <span className="sr-only">Edit</span>
-                                        </th>
+            <div className="rounded-2xl border border-slate-700/50 overflow-hidden bg-slate-800/50 backdrop-blur-sm shadow-xl">
+                <div className="overflow-x-auto">
+                    {isLoading ? (
+                        <div className="text-center py-10 text-slate-400 animate-pulse">Loading employees...</div>
+                    ) : (
+                        <table className="min-w-full divide-y divide-slate-700">
+                            <thead className="bg-slate-800">
+                                <tr>
+                                    <th className="py-3.5 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 sm:pl-6">Name</th>
+                                    <th className="px-3 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-slate-400">Title</th>
+                                    <th className="px-3 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-slate-400">Department</th>
+                                    <th className="px-3 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-slate-400">Email</th>
+                                    <th className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                        <span className="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-700 bg-slate-800/30">
+                                {data?.employees.map((person: any) => (
+                                    <tr key={person.id} className="hover:bg-slate-700/50 transition-colors duration-150">
+                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-6">
+                                            {person.firstName} {person.lastName}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-300">{person.position}</td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-300">
+                                            <span className="inline-flex items-center rounded-full bg-cyan-400/10 px-2.5 py-0.5 text-xs font-medium text-cyan-400 border border-cyan-400/20">
+                                                {person.department}
+                                            </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-400">{person.email}</td>
+                                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                            <button onClick={() => openEditModal(person)} className="text-indigo-400 hover:text-indigo-300 mr-4 transition-colors">
+                                                <PencilSquareIcon className="h-5 w-5" />
+                                            </button>
+                                            <button onClick={() => handleDelete(person.id)} className="text-red-400 hover:text-red-300 transition-colors">
+                                                <TrashIcon className="h-5 w-5" />
+                                            </button>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200">
-                                    {data?.employees.map((person: any) => (
-                                        <tr key={person.id}>
-                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{person.firstName} {person.lastName}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.position}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.department}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.email}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Employee</td>
-                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                                <button onClick={() => openEditModal(person)} className="text-indigo-600 hover:text-indigo-900 mr-4">
-                                                    <PencilSquareIcon className="h-5 w-5" />
-                                                </button>
-                                                <button onClick={() => handleDelete(person.id)} className="text-red-600 hover:text-red-900">
-                                                    <TrashIcon className="h-5 w-5" />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
+                                ))}
+                                {data?.employees.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} className="text-center py-8 text-slate-500 italic">No employees found matching your search.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
 
             {/* Pagination configuration */}
             {data && (
-                <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
+                <div className="flex items-center justify-between border-t border-slate-700/50 px-4 py-3 sm:px-6 mt-4">
                     <div className="flex flex-1 justify-between sm:hidden">
-                        <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
-                        <button disabled={page >= data.pages} onClick={() => setPage(p => p + 1)} className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</button>
+                        <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="relative inline-flex items-center rounded-md border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-50">Previous</button>
+                        <button disabled={page >= data.pages} onClick={() => setPage(p => p + 1)} className="relative ml-3 inline-flex items-center rounded-md border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-50">Next</button>
                     </div>
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                         <div>
-                            <p className="text-sm text-gray-700">
-                                Showing page <span className="font-medium">{page}</span> of <span className="font-medium">{data.pages}</span>
+                            <p className="text-sm text-slate-400">
+                                Showing page <span className="font-medium text-white">{page}</span> of <span className="font-medium text-white">{data.pages}</span>
                             </p>
                         </div>
                         <div>
@@ -141,7 +149,7 @@ export default function EmployeeList() {
                                 <button
                                     onClick={() => setPage(p => Math.max(1, p - 1))}
                                     disabled={page === 1}
-                                    className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                    className="relative inline-flex items-center rounded-l-md px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-600 hover:bg-slate-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 transition-colors"
                                 >
                                     <span className="sr-only">Previous</span>
                                     Previous
@@ -149,7 +157,7 @@ export default function EmployeeList() {
                                 <button
                                     onClick={() => setPage(p => Math.min(data.pages, p + 1))}
                                     disabled={page >= data.pages}
-                                    className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                    className="relative inline-flex items-center rounded-r-md px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-600 hover:bg-slate-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 transition-colors"
                                 >
                                     <span className="sr-only">Next</span>
                                     Next

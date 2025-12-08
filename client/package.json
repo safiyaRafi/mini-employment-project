@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
+    "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-query": "^5.90.12",
     "autoprefixer": "^10.4.22",
     "axios": "^1.13.2",
