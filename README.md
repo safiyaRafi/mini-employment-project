@@ -11,11 +11,15 @@ A full-stack employee management application built with Node.js, Express, Prisma
   - Add new employees.
   - Edit existing employee details.
   - Delete employees.
-- **Modern UI**: Clean interface using Tailwind CSS and Headless UI.
+- **Premium UI**: 
+  - Modern Dark Mode aesthetic.
+  - Glassmorphism effects (Login, Modal).
+  - Animated transitions and interactions.
+  - Tailwind CSS v4 styling.
 
 ## Tech Stack
 - **Backend**: Node.js, Express, Prisma, SQLite
-- **Frontend**: React (Vite), Tailwind CSS, Headless UI, TanStack Query, React Hook Form
+- **Frontend**: React (Vite), Tailwind CSS v4, Headless UI, Framer Motion, TanStack Query
 - **Language**: JavaScript (Backend) / TypeScript (Frontend)
 
 ## Setup Instructions
@@ -59,6 +63,10 @@ A full-stack employee management application built with Node.js, Express, Prisma
 3. Manage employees via the Dashboard or Employees tab.
 
 ## API Documentation
+The full interactive API documentation consists of schemas and examples.
+- **Swagger UI**: `http://localhost:5000/api-docs`
+
+### Key Endpoints
 - `POST /api/auth/login`: Login
 - `GET /api/employees`: List employees (query: page, limit, search)
 - `POST /api/employees`: Create employee
