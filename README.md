@@ -66,6 +66,9 @@ A full-stack employee management application built with Node.js, Express, Prisma
 The full interactive API documentation consists of schemas and examples.
 - **Swagger UI**: `http://localhost:5000/api-docs`
 
+- **Postman Collection**: A `postman_collection.json` file is included in the root directory. Import it into Postman to test APIs.
+  - *Tip*: Run the "Login" request first. It automatically saves the token for subsequent requests.
+
 ### Key Endpoints
 - `POST /api/auth/login`: Login
 - `GET /api/employees`: List employees (query: page, limit, search)
